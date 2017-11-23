@@ -1,0 +1,788 @@
+// first container is a flex centering stuff
+// second container is position:relative , perhaps add some padding for better centering
+// children (probably) position absolute and center, will see
+
+$darkblue: #3b4263;
+$unpurewhite: #f5f5f5;
+$lightgrey: #e6e6e7;
+$grey: #53555d;
+$violetblue: #4d71fa;
+$halfSize: 50%;
+$bigFontSize: 40px;
+$strongYellow: #ffb900;
+$fourWidths: 3.95vw;
+$light-green: #b3e5dc;
+
+@font-face {
+  font-family: "Aller-Display";
+  src: url("./AllerDisplay.ttf");
+}
+
+body {
+  background-color: $darkblue;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+%shadow {
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.game-wrapper {
+  max-width: 700px;
+  width: 90%;
+  margin: 15px auto;
+  display: flex;
+  flex-direction: column;
+  // perhaps add it flex-wrap:wrap
+  //  flex-basis: 0; // probably comment
+  text-align: center;
+  justify-content: center;
+  .letters {
+    text-align: center;
+    margin: 0 auto;
+    div {
+      background: white;
+      @extend %shadow;
+      display: inline-block;
+      padding: 8px 15px 10px;
+      margin: 3px;
+      font-weight: bold;
+      font-size: 26px;
+      cursor: pointer;
+      position: relative;
+      transition: 0.2s;
+      border-radius: 3px;
+      &:hover {
+        background: #ddd;
+      }
+    }
+    .disabled {
+      color: #888;
+      background: #ccc;
+      cursor: default;
+      pointer-events: none;
+      &:before {
+        content: "\002716";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: normal;
+        font-size: 32px;
+        color: #992020;
+      }
+      &.correct {
+        background: $light-green;
+        &:before {
+          color: #298772;
+          content: "\002714";
+        }
+      }
+    }
+    @media (max-width: 640px) {
+      div {
+        padding: 6px 12px 8px;
+        font-size: 18px;
+      }
+      .disabled:before {
+        font-size: 26px;
+      }
+    }
+  }
+}
+
+#hangman {
+  background-color: $unpurewhite;
+  min-height: 450px;
+  width: 70%;
+  min-width: 400px;
+  text-align: center;
+  // height: $halfsize;
+
+  margin: 0 auto;
+  border-radius: 10px;
+  padding: 20px;
+  font-family: "Aller-Display", sans-serif;
+}
+
+// Displays final outcome of game  ---> win or lose
+.game-score {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 3;
+  display: flex;
+  opacity: 0.6;
+  background-color: $darkblue;
+  flex-direction: column;
+  text-align: center;
+  h1 {
+    font-size: $bigFontSize;
+    margin-bottom: 10px;
+  }
+}
+
+.score {
+  color: $unpurewhite;
+  font-size: $bigFontSize;
+}
+
+.reset-section {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.play-again {
+  color: $strongYellow;
+  width: 150px;
+  height: 45px;
+  border: 2px dashed $strongYellow;
+  border-radius: 20px;
+  background: $darkblue;
+  cursor: pointer;
+}
+
+.play-again:hover {
+  background-color: $lightgrey;
+}
+
+.folk {
+  display: flex;
+  padding-left: 71px;
+  flex-direction: column;
+  //align-content: center;
+  align-items: center;
+  position: relative;
+  margin: 0 auto;
+  height: 350px;
+  width: 370px;
+  @media (max-width: 640px) {
+    padding-left: 40px;
+  }
+}
+
+.gallows {
+  overflow: hidden;
+  height: 30px;
+  flex-shrink: 0;
+  right: 48px;
+  width: 120px;
+  position: relative;
+}
+
+.head {
+  position: relative;
+  flex-shrink: 0;
+  bottom: 3px;
+  height: 95px;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.neck {
+  bottom: 7px;
+  flex-shrink: 0;
+  position: relative;
+  height: 30px;
+  z-index: 1;
+}
+
+.corpus {
+  height: 80px;
+  flex-shrink: 0;
+  bottom: 11px;
+  position: relative;
+  z-index: 1;
+}
+
+.left-arm {
+  height: 60px;
+  flex-shrink: 0;
+  right: 37px;
+  bottom: 89px;
+  position: relative;
+  z-index: 1;
+}
+
+.left-hand {
+  bottom: 101px;
+  right: 63px;
+  flex-shrink: 0;
+  height: 14px;
+  position: relative;
+  z-index: 0;
+}
+
+.right-arm {
+  left: 37px;
+  flex-shrink: 0;
+  bottom: 163px;
+  height: 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.right-hand {
+  position: relative;
+  flex-shrink: 0;
+  height: 14px;
+  bottom: 175px;
+  left: 63px;
+  z-index: 0;
+}
+
+.left-leg {
+  position: relative;
+  height: 84px;
+  bottom: 167px;
+  right: 22px;
+  overflow: hidden;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.left-foot {
+  bottom: 171px;
+  right: 40px;
+  position: relative;
+  height: 15px;
+  flex-shrink: 0;
+  z-index: 0;
+}
+
+.right-leg {
+  bottom: 263px;
+  left: 22px;
+  position: relative;
+  height: 84px;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.right-foot {
+  position: relative;
+  height: 15px;
+  bottom: 268px;
+  left: 38px;
+  flex-shrink: 0;
+  z-index: 0;
+}
+
+// try without flex, upper will be with flex
+
+/*
+$darkblue: #3b4263;
+$unpurewhite: #f5f5f5;
+$lightgrey: #e6e6e7;
+$grey: #53555d;
+$violetblue: #4d71fa;
+$halfSize: 50%;
+$bigFontSize: 40px;
+$strongYellow: #ffb900;
+$fourWidths: 3.95vw;
+$light-green: #b3e5dc;
+
+@font-face {
+  font-family: "Aller-Display";
+  src: url("./AllerDisplay.ttf");
+}
+
+body {
+  background-color: $darkblue;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+%shadow {
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.game-wrapper {
+  max-width: 700px;
+  width: 90%;
+  margin: 15px auto;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  .letters {
+    text-align: center;
+    margin: 0 auto;
+    div {
+      background: white;
+      @extend %shadow;
+      display: inline-block;
+      padding: 8px 16px 10px;
+      margin: 3px;
+      font-weight: bold;
+      font-size: 26px;
+      cursor: pointer;
+      position: relative;
+      transition: 0.2s;
+      border-radius: 3px;
+      &:hover {
+        background: #ddd;
+      }
+    }
+    .disabled {
+      color: #888;
+      background: #ccc;
+      cursor: default;
+      pointer-events: none;
+      &:before {
+        content: "\002716";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: normal;
+        font-size: 32px;
+        color: #992020;
+      }
+      &.correct {
+        background: $light-green;
+        &:before {
+          color: #298772;
+          content: "\002714";
+        }
+      }
+    }
+    @media (max-width: 640px) {
+      div {
+        padding: 6px 12px 8px;
+        font-size: 18px;
+      }
+      .disabled:before {
+        font-size: 26px;
+      }
+    }
+  }
+}
+
+#hangman {
+  background-color: $unpurewhite;
+  min-height: 450px;
+  // height: $halfsize;
+  width: $halfSize+20%;
+  margin: 0 auto;
+  border-radius: 10px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  font-family: "Aller-Display", sans-serif;
+}
+
+// Displays final outcome of game  ---> win or lose
+.game-score {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 3;
+  display: flex;
+  opacity: 0.6;
+  background-color: $darkblue;
+  flex-direction: column;
+  text-align: center;
+  h1 {
+    font-size: $bigFontSize;
+    margin-bottom: 10px;
+  }
+}
+
+.score {
+  color: $unpurewhite;
+  font-size: $bigFontSize;
+}
+
+.reset-section {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.play-again {
+  color: $strongYellow;
+  width: 150px;
+  height: 45px;
+  border: 2px dashed $strongYellow;
+  border-radius: 20px;
+  background: $darkblue;
+  cursor: pointer;
+}
+
+.play-again:hover {
+  background-color: $lightgrey;
+}
+
+.folk {
+  display: inline-block;
+  text-align: center;
+  min-height: 400px;
+  min-width: 400px;
+  padding-top: 10px;
+}
+
+.gallows {
+  // top: -90px;
+  bottom: 93px;
+  overflow: hidden;
+  height: 30px;
+  width: 120px;
+  position: relative;
+  margin-top: 10px;
+}
+
+.head {
+  // it should be centered by default, no reason to center individually
+  // margin: 0 auto;
+  position: relative;
+  right: 55px;
+  height: 95px;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.neck {
+  position: relative;
+  // top: -15px;
+  height: 30px;
+  z-index: 1;
+}
+
+.corpus {
+  height: 80px;
+  // margin: -20px 83px;
+  z-index: 1;
+}
+
+.left-arm {
+  height: 60px;
+  // margin: -20px -174px;
+  z-index: 1;
+  position: absolute;
+}
+
+.left-hand {
+  height: 14px;
+  // margin: 28px -176px;
+  z-index: 0;
+  position: absolute;
+}
+
+.right-arm {
+  height: 60px;
+  //  margin: -20px -103px;
+  z-index: 1;
+  position: absolute;
+}
+
+.right-hand {
+  height: 14px;
+  // margin: 28px -52px;
+  z-index: 0;
+  position: absolute;
+}
+
+.left-leg {
+  height: 84px;
+  //margin: 50px -149px;
+  z-index: 1;
+  position: absolute;
+}
+
+.left-foot {
+  height: 15px;
+  // margin: 123px -164px;
+  z-index: 0;
+  position: absolute;
+}
+
+.right-leg {
+  height: 84px;
+  //margin: 52px -106px;
+  z-index: 1;
+  position: absolute;
+}
+
+.right-foot {
+  height: 15px;
+  //  margin: 123px -90px;
+  z-index: 0;
+  position: absolute;
+}
+*/
+
+// css for letters, not needing it so commenting it
+// .empty-letter-box, .letter-box {
+//   display: inline-block;
+//   width: $fourWidths;
+//   height: $fourWidths;
+//   border-radius: 5px;
+//   margin-right: 4px;
+//   line-height: $fourWidths;
+// };
+
+// .empty-letter-box {
+//   background-color: $lightgrey;
+// }
+
+// width of boxes for letters. not needing it so why not comment it
+// .word-box{
+//   min-width:430px;
+// }
+
+// Missed letters subtitle. Not needing it, so commenting it
+// .missed-letters-box {
+//   display: inline-block;
+//   h3 {
+//     color: $grey;
+//   };
+//   .missed-letters {
+//     overflow: hidden;
+//     word-wrap:break-word;
+//     color: $violetblue;
+//     font-size: $bigFontSize;
+//     letter-spacing: 5px;
+//     margin-top: -20px;
+//   }
+// }
+
+// was taking care of letter box, will not use it so why not comment it
+// .letter-box {
+//   background-color: $grey;
+//   opacity: 0.9;
+//   vertical-align: top;
+//   .correct-letter {
+//     color: $unpurewhite;
+//     font-size: $bigFontSize;
+//     text-align: center;
+//   }
+// }
+
+//ABOVE THIS LINE I"M TAKING CARE OF NEW LETTERS
+
+/* 
+    max-width: 700px;
+    width: 90%;
+    margin: 15px auto;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+*/
+// PREVIOUS SETUP. FROM NOW ON IT WILL GET CHANGED
+/*
+$darkblue: #3B4263;
+$unpurewhite: #F5F5F5;
+$lightgrey: #E6E6E7;
+$grey: #53555D;
+$violetblue: #4D71FA;
+$halfSize: 50%;
+$bigFontSize: 40px;
+$strongYellow: #FFB900;
+$fourWidths: 3.95vw;
+
+@font-face {
+  font-family: 'Aller-Display';
+  src: url('./css/AllerDisplay.ttf');
+}
+
+body {
+  background-color: $darkblue;
+}
+
+.missed-letters-box {
+  display: inline-block;
+  h3 {
+    color: $grey;
+  };
+  .missed-letters {
+    overflow: hidden;
+    word-wrap:break-word;
+    color: $violetblue;
+    font-size: $bigFontSize;
+    letter-spacing: 5px;
+    margin-top: -20px;
+  }
+}
+
+.empty-letter-box, .letter-box {
+  display: inline-block;
+  width: $fourWidths;
+  height: $fourWidths;
+  border-radius: 5px;
+  margin-right: 4px;
+  line-height: $fourWidths; 
+};
+
+.empty-letter-box {
+  background-color: $lightgrey;
+}
+
+.letter-box {
+  background-color: $grey;
+  opacity: 0.9;
+  vertical-align: top;
+  .correct-letter {
+    color: $unpurewhite;
+    font-size: $bigFontSize;
+    text-align: center;
+  }
+}
+ 
+#hangman {
+  background-color: $unpurewhite;
+  min-height: 400px;
+  height: $halfSize;
+  width: $halfSize;
+  margin: 50px auto;
+  border-radius: 10px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Aller-Display', sans-serif;
+}
+
+.game-score {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 3;
+  display: flex;
+  opacity: 0.6;
+  background-color: $darkblue;
+  flex-direction: column;
+  text-align: center;
+  h1 {
+  font-size: $bigFontSize;
+  margin-bottom: 10px;
+  }
+}
+
+.score {
+  color: $unpurewhite;
+  font-size: $bigFontSize;
+}
+
+.reset-section {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.play-again {
+  color: $strongYellow;
+  width: 150px;
+  height: 45px;
+  border: 2px dashed $strongYellow;
+  border-radius: 20px;
+  background: $darkblue;
+  cursor: pointer;
+}
+
+.play-again:hover {
+  background-color: $lightgrey;
+}
+
+.folk {
+  display: inline-block;
+  margin-left: -20px;
+  vertical-align: top;
+  margin-top: 20px;
+  min-width: 360px;
+  min-height: 300px;
+  bottom:0px;
+}
+
+.gallows {
+  height: 30px;
+  width: 120px;
+}
+
+.head {
+  display: block;
+  margin: -6px 64px;
+  height: 95px;
+  z-index: 2;
+}
+
+.neck {
+  height: 30px;
+  display: block;
+  margin: 0px 97px;
+  z-index: 1;
+}
+
+.corpus {
+  height: 80px;
+  margin: -15px 83px;
+  z-index: 1;
+}
+
+.left-arm {
+  height: 60px;
+  margin: -15px -174px;
+  z-index: 1;
+  position: absolute;
+}
+
+.left-hand {
+  height: 14px;
+  margin: 33px -176px;
+  z-index: 0;
+  position: absolute;
+}
+
+.right-arm {
+  height: 60px;
+  margin: -15px -103px;
+  z-index: 1;
+  position: absolute;
+}
+
+.right-hand {
+  height: 14px;
+  margin: 33px -52px;
+  z-index: 0;
+  position: absolute;
+}
+
+.left-leg {
+  height: 84px;
+  margin: 55px -149px;
+  z-index: 1;
+  position: absolute;
+}
+
+.left-foot {
+  height: 15px;
+  margin: 128px -164px;
+  z-index: 0;
+  position: absolute;
+}
+
+.right-leg {
+  height: 84px;
+  margin: 57px -106px;
+  z-index: 1;
+  position: absolute;
+}
+
+.right-foot {
+  height: 15px;
+  margin: 128px -90px;
+  z-index: 0;
+  position: absolute;
+}
+*/
